@@ -1,20 +1,33 @@
 services:
-  test:mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
-  
-phpmyadmin:
+  mysql:
+    image: mysql:8.0
+    container_name: container-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: companydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: passer123@
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_company_data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+
+  phpmyadmin:
     container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
     ports:
-      - "8080:80"
+      - "81:80"
     environment:
-      MYSQL_ROOT_PASSWORD:root
+      MYSQL_ROOT_PASSWORD: root
       PMA_HOST: mysql
-      PMA_USER:user
-      PMA_PASSWORD:passer@123
+      PMA_USER: user
+      PMA_PASSWORD: passer123@
     depends_on:
       - mysql
     restart: unless-stopped
 
-  volumes:
-    mysql_company_data:
-     driver:local
+volumes:
+  mysql_company_data:
+    driver: local
