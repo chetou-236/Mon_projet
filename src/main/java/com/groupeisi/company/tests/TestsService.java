@@ -9,11 +9,11 @@ public class TestsService {
     public static void main(String[] args) {
         IAccountService iAccountService = new AccountServiceImpl();
         AccountDto account = new AccountDto();
-        account.setUsername("Mohamed");
+        account.setUsername("chetou");
         account.setPassword("passer123");
 
-        //AccountDto response = iAccountService.createAccount(account);
-        //System.out.println(response);
+        AccountDto response = iAccountService.createAccount(account);
+        System.out.println(response);
 
         try {
             AccountDto accountResponse = iAccountService.login(account.getUsername(), account.getPassword());
@@ -26,7 +26,9 @@ public class TestsService {
             e.printStackTrace();
         }
 
-        iAccountService.getAllAccounts().forEach(System.out::println);
+        iAccountService.getAllAccounts()
+                .forEach(System.out::println);
+
     }
 
 }

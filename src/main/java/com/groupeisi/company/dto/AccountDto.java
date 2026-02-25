@@ -1,19 +1,21 @@
 package com.groupeisi.company.dto;
 
-import java.io.Serializable;
+public class AccountDto {
 
-public class AccountDto  implements Serializable {
-    private String username;
+    private String email;
     private String password;
+    private String username;
 
     public AccountDto() {
     }
 
-    public AccountDto(String username, String password) {
-        this.username = username;
+    public AccountDto(String email, String password, String username) {
+        this.email = email;
         this.password = password;
+        this.username = username;
     }
 
+    // Getters & Setters
     public String getUsername() {
         return username;
     }
@@ -30,9 +32,20 @@ public class AccountDto  implements Serializable {
         this.password = password;
     }
 
-    @Override
-    public String toString(){
-        return username + " " + password;
+    public String getEmail() {
+        return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountDto{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

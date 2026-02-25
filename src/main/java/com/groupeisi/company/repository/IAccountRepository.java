@@ -6,3 +6,4 @@ public interface IAccountRepository extends IRepository<AccountEntity> {
     AccountEntity login(String username, String password);
 
 }
+

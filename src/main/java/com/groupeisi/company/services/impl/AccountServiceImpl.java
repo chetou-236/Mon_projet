@@ -1,105 +1,66 @@
 package com.groupeisi.company.services.impl;
 
-import com.groupeisi.company.config.HibernateUtil;
 import com.groupeisi.company.dto.AccountDto;
 import com.groupeisi.company.entities.AccountEntity;
-import com.groupeisi.company.mappers.AccountMapper;
 import com.groupeisi.company.repository.AccountRepository;
 import com.groupeisi.company.repository.IAccountRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class AccountServiceImpl  implements IAccountService {
-    private IAccountRepository iAcountRepository = new AccountRepository();
-    private AccountMapper accountMapper = new AccountMapper();
-    private static Logger logger = LoggerFactory.getLogger(HibernateUtil.class);
+public class AccountServiceImpl implements IAccountService {
 
-    @Override
-    public AccountDto getAccount(String username) {
-        try {
-            AccountEntity accountEntity = iAcountRepository.find(username, new AccountEntity());
+    private final IAccountRepository repository;
 
-            if (accountEntity != null) {
-                return accountMapper.toAccountDto(accountEntity);
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
+    public AccountServiceImpl() {
+        this.repository = new AccountRepository();
     }
 
     @Override
-    public AccountDto createAccount(AccountDto accountDto) {
-        try {
-            boolean result = iAcountRepository.create(accountMapper.toAccountEntity(accountDto));
-
-            if (result) {
-                return accountDto;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
+    public AccountDto createAccount(AccountDto dto) {
+        AccountEntity entity = new AccountEntity(dto.getUsername(), dto.getPassword(), dto.getEmail());
+        boolean created = repository.create(entity);
+        return created ? dto : null;
     }
 
     @Override
-    public AccountDto updateAccount(AccountDto accountDto) {
-        try {
-            boolean result = iAcountRepository.update(accountMapper.toAccountEntity(accountDto));
+    public AccountDto login(String email, String password) {
+        // 🔹 récupère l'utilisateur depuis le repository
+        AccountEntity account = repository.login(email, password);
 
-            if (result) {
-                return accountDto;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
+        if (account != null) {
+            // 🔹 retourne un DTO si trouvé
+            return new AccountDto(account.getUsername(), account.getPassword(), account.getEmail());
         }
-    }
-
-    @Override
-    public boolean deleteAccount(String username) {
-        try {
-            return iAcountRepository.delete(username, new AccountEntity());
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public AccountDto login(String username, String password) {
-        try {
-            AccountEntity accountEntity = iAcountRepository.login(username, password);
-
-            if (accountEntity != null) {
-                return accountMapper.toAccountDto(accountEntity);
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
+        return null; // si email/password incorrect
     }
 
     @Override
     public List<AccountDto> getAllAccounts() {
-        try {
-            List<AccountEntity> accountEntity = iAcountRepository.all(new AccountEntity());
-
-            return accountMapper.toListAccountDto(accountEntity);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
+        return repository.all(AccountEntity.class)
+                .stream()
+                .map(a -> new AccountDto(a.getUsername(), a.getPassword(), a.getEmail()))
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public AccountDto getAccount(String username) {
+        AccountEntity account = repository.find(AccountEntity.class, username);
+        if (account != null) {
+            return new AccountDto(account.getUsername(), account.getPassword(), account.getEmail());
+        }
+        return null;
+    }
+
+    @Override
+    public AccountDto updateAccount(AccountDto dto) {
+        AccountEntity entity = repository.find(AccountEntity.class, dto.getUsername());
+        if (entity != null) {
+            entity.setPassword(dto.getPassword());
+            entity.setEmail(dto.getEmail());
+            boolean updated = repository.update(entity);
+            return updated ? dto : null;
+        }
+        return null;
+    }
 }

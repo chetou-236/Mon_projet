@@ -6,18 +6,21 @@ import com.groupeisi.company.repository.IAccountRepository;
 
 public class TestsRepository {
     public static void main(String[] args) {
-        IAccountRepository iAccountRepository = new AccountRepository();
-        AccountEntity account = new AccountEntity();
-        account.setUsername("user");
-        account.setPassword("passer123");
+        IAccountRepository accountRepository = new AccountRepository();
 
-        boolean response = iAccountRepository.create(account);
-        System.out.println(response);
+        // Création du compte
+        AccountEntity a = new AccountEntity("djamilla",
+                "passer123",
+                "djamilla@gmail.com");
+        boolean created = accountRepository.create(a);
+        System.out.println("Compte créé ? " + created);
 
+        // Login
         try {
-            AccountEntity accountResponse = iAccountRepository.login(account.getUsername(), account.getPassword());
+            AccountEntity accountResponse = accountRepository.login(a.getUsername(),
+                    a.getPassword()); // ✅ utilisation de "a" ici
             if (accountResponse != null) {
-                System.out.println("Login successful");
+                System.out.println("Login successful : " + accountResponse.getUsername());
             } else {
                 System.out.println("Login Failed");
             }
@@ -26,4 +29,3 @@ public class TestsRepository {
         }
     }
 }
-

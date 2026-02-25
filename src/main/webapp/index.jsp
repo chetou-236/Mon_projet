@@ -1,3 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +33,7 @@
                 <img src="./public/images/img-01.png" alt="IMG">
             </div>
 
-            <form  method="post"  action="login" class="login100-form validate-form">
+            <form method="post" action="login" class="login100-form validate-form">
 					<span class="login100-form-title">
 						Member Login
 					</span>
@@ -50,6 +53,10 @@
 							<i class="fa fa-lock" aria-hidden="true"></i>
 						</span>
                 </div>
+
+                <c:if test="${message != null}">
+                    <span style="color:red"> ${message} </span>
+                </c:if>
 
                 <div class="container-login100-form-btn">
                     <button class="login100-form-btn">
@@ -78,8 +85,6 @@
 </div>
 
 
-
-
 <!--===============================================================================================-->
 <script src="./public/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
@@ -95,7 +100,7 @@
     })
 </script>
 <!--===============================================================================================-->
-<script src="./public/.js/main.js"></script>
+<script src="./public/js/main.js"></script>
 
 </body>
 </html>

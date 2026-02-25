@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mysql:
     image: mysql:8.0
@@ -12,7 +14,10 @@ services:
     volumes:
       - mysql_company_data:/var/lib/mysql
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "user", "--password=passer123@"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   phpmyadmin:
     container_name: phpmyadmin
@@ -20,10 +25,10 @@ services:
     ports:
       - "81:80"
     environment:
-      MYSQL_ROOT_PASSWORD: root
       PMA_HOST: mysql
       PMA_USER: user
       PMA_PASSWORD: passer123@
+      PMA_PORT: 3306
     depends_on:
       - mysql
     restart: unless-stopped

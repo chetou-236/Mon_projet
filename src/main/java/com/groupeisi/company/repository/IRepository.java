@@ -2,10 +2,16 @@ package com.groupeisi.company.repository;
 
 import java.util.List;
 
-public interface IRepository <T>{
-    boolean create(T t);
-    boolean delete(String id, T t);
-    boolean update(T t);
-    T find(String id, T t);
-    List<T> all(T t);
+public interface IRepository<T> {
+
+    boolean create(T entity);
+
+    boolean update(T entity);
+
+    boolean delete(Class<T> entityClass, String id);
+
+    T find(Class<T> entityClass, String id);
+
+    List<T> all(Class<T> entityClass);
 }
+
