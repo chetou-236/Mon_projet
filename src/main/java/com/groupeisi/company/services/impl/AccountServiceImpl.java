@@ -18,7 +18,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public AccountDto createAccount(AccountDto dto) {
-        AccountEntity entity = new AccountEntity(dto.getUsername(), dto.getPassword(), dto.getEmail());
+        AccountEntity entity = new AccountEntity(dto.getUsername(), dto.getPassword());
         boolean created = repository.create(entity);
         return created ? dto : null;
     }
@@ -57,7 +57,7 @@ public class AccountServiceImpl implements IAccountService {
         AccountEntity entity = repository.find(AccountEntity.class, dto.getUsername());
         if (entity != null) {
             entity.setPassword(dto.getPassword());
-            entity.setEmail(dto.getEmail());
+            entity.setEmail(dto.getUsername());
             boolean updated = repository.update(entity);
             return updated ? dto : null;
         }

@@ -20,11 +20,19 @@ public class AccountEntity implements Serializable {
     public AccountEntity() {
     }
 
+    public AccountEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+
+    }
+    // 🔹 optionnel (utile pour login / DTO)
     public AccountEntity(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
+
+
 
     // Getters & Setters
 
